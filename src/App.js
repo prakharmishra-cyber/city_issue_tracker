@@ -10,6 +10,7 @@ import Home from './components/Home';
 import Feed from './components/Feed';
 import Mine from './components/Mine';
 import PostIssue from './components/PostIssue';
+import './firebase_config.js';
 
 
 function App() {
