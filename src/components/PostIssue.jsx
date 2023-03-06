@@ -10,6 +10,7 @@ import { ref, uploadBytes } from "firebase/storage";
 import axios from 'axios';
 import BASE_URL from  '../api_url.js';
 import {Buffer} from 'buffer';
+import { Toast } from 'primereact/toast';
 
 
 const PostIssue = () => {
@@ -33,6 +34,7 @@ const PostIssue = () => {
         { name: 'Cleaning', code: 'CLG' },
         { name: 'Garbage', code: 'GRB' }
     ];
+    const toast = useRef(null);
 
     useLayoutEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -40,6 +42,11 @@ const PostIssue = () => {
             setCenterLng(position.coords.longitude);
         });
     }, []);
+
+    const show = () => {
+        toast.current.show({ severity: 'info', summary: 'Info', detail: 'Issue uploaded successfully' });
+    };
+
 
     const onChangee = async(e) => {
         const files = e.target.files;
@@ -73,6 +80,7 @@ const PostIssue = () => {
             dislikes:0
         }).then(({data})=>{
             console.log(data);
+            show();
         }).catch((error)=>{
             console.log(error);
         })
@@ -93,7 +101,7 @@ const PostIssue = () => {
                     <div>Set Issue Location </div>
                     <i className="pi pi-arrow-right animate-pulse" style={{ fontSize: '1rem' }}></i>
                 </div>
-
+                <Toast ref={toast} />
                 <Map
                     title="Choose a Location"
 
