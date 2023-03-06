@@ -4,8 +4,12 @@ import Map from 'mapmyindia-react';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
 import { storage } from "../firebase_config.js";
 import { ref, uploadBytes } from "firebase/storage";
+import axios from 'axios';
+import BASE_URL from  '../api_url.js';
+import {Buffer} from 'buffer';
 
 
 const PostIssue = () => {
@@ -14,7 +18,10 @@ const PostIssue = () => {
     const [centerLat, setCenterLat] = useState(28.61);
     const [centerLng, setCenterLng] = useState(77.23);
     const [issue_image, setIssue_Image] = useState(null);
+    const [marker_pos, setMarker_pos] = useState({});
     const [url, setUrl] = useState('');
+    const [issue_title, setIssue_title] = useState('');
+    const [issue_description, setIssue_description] = useState('');
     const InputRef = useRef();
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const departments = [
@@ -32,13 +39,42 @@ const PostIssue = () => {
         });
     }, []);
 
-    const onChangee = (e) => {
+    const onChangee = async(e) => {
         const files = e.target.files;
         console.log(files[0]);
         files.length > 0 && setUrl(URL.createObjectURL(files[0]));
-        setIssue_Image(files[0]);
-
+        const temp_data = await files[0].arrayBuffer().then((output)=>output);
+        setIssue_Image(temp_data);
     };
+
+    const PostIssue = async () => {
+        console.log({
+            mobno:localStorage.getItem('mobno'),
+            issue_image: Buffer.from(issue_image),
+            issue_description,
+            issue_title,
+            selectedDepartment,
+            marker_pos,
+            likes:0,
+            dislikes:0
+        })
+        
+        
+        await axios.post(`${BASE_URL}/post_an_issue`, {
+            mobno:localStorage.getItem('mobno'),
+            issue_image: Buffer.from(issue_image),
+            issue_description,
+            issue_title,
+            selectedDepartment,
+            marker_pos,
+            likes:0,
+            dislikes:0
+        }).then(({data})=>{
+            console.log(data);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
 
     const handleRemoveImage = (e) => {
         setUrl('');
@@ -71,8 +107,7 @@ const PostIssue = () => {
                             },
                             onDragend: (e) => {
                                 console.log(e.target.getLatLng());
-                                setCenterLat(e.target.getLatLng().lat);
-                                setCenterLng(e.target.getLatLng().lng);
+                                setMarker_pos(e.target.getLatLng());
                             }
                         }
                     ]}
@@ -80,11 +115,11 @@ const PostIssue = () => {
                 <div className="text-white text-xs text-right py-1">*Drag the marker to choose the location.</div>
                 <div className="w-full my-2">
                     <span className="p-float-label">
-                        <InputText id="username" className='w-full' />
+                        <InputText onChange={e => setIssue_title(e.target.value)} id="username" className='w-full' />
                         <label htmlFor="username" className='text-white'>Issue Title</label>
                     </span>
                 </div>
-                <InputTextarea placeholder='Describe the issue' className='my-1' rows={5} cols={30} />
+                <InputTextarea onChange={e => setIssue_description(e.target.value)} placeholder='Describe the issue' className='my-1' rows={5} cols={30} />
                 <div className=" relative  mt-2">
                     <label htmlFor="name-with-label" className="text-white bg-[#111111]">
                         Upload Supporting Images
@@ -111,8 +146,10 @@ const PostIssue = () => {
                     <Dropdown value={selectedDepartment} onChange={(e) => {
                         setSelectedDepartment(e.value);
                     }} options={departments} optionLabel="name"
-                    placeholder="Select a Department" className="w-full md:w-14rem" />
-
+                        placeholder="Select a Department" className="w-full md:w-14rem" />
+                    <div className="flex justify-center mt-2 w-full">
+                        <Button label="Submit" className='w-full' onClick={PostIssue}/>
+                    </div>
                 </div>
             </div>
 

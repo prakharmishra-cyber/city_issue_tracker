@@ -5,16 +5,28 @@ import { InputText } from 'primereact/inputtext';
 import app_logo from '../images/app_logo.jpg';
 import { useNavigate } from 'react-router-dom';
 import BASE_URL from '../api_url.js';
+import axios from 'axios';
 
 
 const Register = () => {
-  const [email, setEmail] = useState('');
+  const [mobno, setmobno] = useState('');
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
 
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
+    await axios.post(`${BASE_URL}/register`, {
+      mobno,
+      pwd:password
+    }).then(({data})=>{
+      console.log(data);
+      localStorage.setItem('mobno', data.mobno);
+      localStorage.setItem('pwd', data.pwd);
+      localStorage.setItem('user_id', data._id);
+    }).catch(()=>{
+      console.log('Something went wrong!');
+    })
     navigate('/home');
   }
 
@@ -23,7 +35,7 @@ const Register = () => {
       <div className="flex flex-col justify-center items-center gap-4 p-3 w-full">
         <img src={app_logo} alt="app_logo" className='animate-pulse' width={240} />
         
-        <InputText placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className='w-4/5' />
+        <InputText placeholder="Enter your phone number" value={mobno} onChange={e => setmobno(e.target.value)} className='w-4/5' />
         <InputText placeholder="Enter your password" type="password" value={password} onChange={e => setPassword(e.target.value)} className='w-4/5' />
         <InputText placeholder="Confirm your password" type="password" value={cpassword} onChange={e => setCpassword(e.target.value)} className='w-4/5' />
         <div className="flex justify-center space-x-2 w-full mt-10">
@@ -35,7 +47,7 @@ const Register = () => {
           </button>
         </div>
         <div onClick={()=>navigate('/login')} className="text-white text-center cursor-pointer">
-          Already have an account, register!
+          Already have an account, Login!
         </div>
       </div>
     </div>
