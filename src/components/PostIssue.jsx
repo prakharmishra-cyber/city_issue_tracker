@@ -35,6 +35,7 @@ const PostIssue = () => {
         { name: 'Garbage', code: 'GRB' }
     ];
     const toast = useRef(null);
+    var marke_pos = {};
 
     useLayoutEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -75,7 +76,7 @@ const PostIssue = () => {
             issue_description,
             issue_title,
             selectedDepartment,
-            marker_pos,
+            marke_pos,
             likes:0,
             dislikes:0
         }).then(({data})=>{
@@ -116,7 +117,8 @@ const PostIssue = () => {
                             },
                             onDragend: (e) => {
                                 console.log("dragend");
-                                setMarker_pos(e.target.getLatLng());
+                                marke_pos = e.target.getLatLng();
+                                // setMarker_pos(e.target.getLatLng());
                             }
                         }
                     ]}
