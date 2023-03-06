@@ -22,7 +22,7 @@ const Home = () => {
         get_data();
     }, []);
     return (
-        <div className=' bg-vlt h-screen text-white'>
+        <div className=' bg-vlt  text-white'>
             <div className=''>
                 <div className='p-3 text-4xl animate-pulse pl-5'>
                     <div className='flex gap-1 items-center'>
@@ -33,11 +33,11 @@ const Home = () => {
                         <div>Issues Posted</div>
                     </div>
                 </div>
-                <div className='flex flex-row gap-1 justify-center'>
+                <div className='flex flex-col gap-4 justify-center items-center mb-20'>
                     {
                         issues.map((element, index) => {
                             return (
-                                <div key={index} className='p-3 w-[90%]  bg-white text-vlt border border-gray-200 shadow-md shadow-gray-200'>
+                                <div key={index} className='p-3 w-[90%]  bg-white text-vlt border border-gray-200 shadow-sm rounded-lg shadow-gray-200'>
                                     <div className="flex justify-between">
                                         <div className='text-2xl'>{element.issue_title}</div>
                                         <div className='flex gap-2 '>

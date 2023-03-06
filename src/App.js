@@ -27,7 +27,7 @@ function Redirect({to}) {
 
 function App() {
   return (
-    <div className="App">
+    <div className="App " >
       <Routes>
         <Route path='/' element={<Redirect to="/login"/>}/>
         <Route path="/login" element={<Login/>} />
