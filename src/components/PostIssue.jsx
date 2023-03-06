@@ -18,6 +18,8 @@ const PostIssue = () => {
     const [centerLat, setCenterLat] = useState(28.61);
     const [centerLng, setCenterLng] = useState(77.23);
     const [issue_image, setIssue_Image] = useState(null);
+    const [marker_lat, setMarker_lat] = useState(28.61);
+    const [marker_lng, setMarker_lng] = useState(77.23);
     const [marker_pos, setMarker_pos] = useState({});
     const [url, setUrl] = useState('');
     const [issue_title, setIssue_title] = useState('');
@@ -97,7 +99,6 @@ const PostIssue = () => {
 
                     markers={[
                         {
-
                             center: [centerLat, centerLng],
                             position: [centerLat, centerLng],
                             draggable: true,
@@ -106,7 +107,7 @@ const PostIssue = () => {
                                 console.log("clicked ");
                             },
                             onDragend: (e) => {
-                                console.log(e.target.getLatLng());
+                                console.log("dragend");
                                 setMarker_pos(e.target.getLatLng());
                             }
                         }
