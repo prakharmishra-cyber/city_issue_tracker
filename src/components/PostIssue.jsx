@@ -127,7 +127,8 @@ const PostIssue = () => {
             },
             likes: 0,
             dislikes: 0,
-            posted_on: new Date()
+            posted_on: new Date(),
+            city_name:city_name
         }).then(({ data }) => {
             console.log(data);
             show();
